@@ -64,18 +64,15 @@ void loop() {
   //När grön knapp trycks ned så ska skärmen visa användarens puls 
   if (digitalRead(buttonGreen) == LOW) { 
     delay(50); // Debounce delay
-    State_pulse = true;
-    State_stopwatch = false;
-    State_clock = false;
+    State_pulse = true;       
+    State_stopwatch = false;  
+    State_clock = false;      
     while ((State_pulse = true) && (digitalRead(buttonRed) == HIGH) && (digitalRead(buttonYellow) == HIGH)) {
-      // Constantly test to see if "a beat happened".
-
-      int myBPM = pulseSensor.getBeatsPerMinute();  // Calls function on our pulseSensor object that returns BPM as an "int".
-
+      int myBPM = pulseSensor.getBeatsPerMinute();  
       updateOled(String(myBPM));
     }
   }
-  // delay(200);
+  //När gul knapp trycks ned så ska skärmen visa tiden
   if (digitalRead(buttonYellow) == LOW) { //tidvisningen
     delay(50); // Debounce delay
     State_pulse = false;
@@ -88,7 +85,7 @@ void loop() {
 
     }
   }
-
+  // när röd knapp trycks ned så ska skärmen visa stoppuret
   if (digitalRead(buttonRed) == LOW) { //stoppuret
     delay(50); // Debounce delay
     State_pulse = false;
@@ -105,32 +102,33 @@ void loop() {
   }
 }
 
-// Main function that updates the clock with each passing second since the tiltswitch was tilted.
-
+// Funktionen uppdaterar stoppuret, den sätts igäng när den röda knappen trycks ned
 void timeStart() {
   RtcDateTime now = Rtc.GetDateTime();
   startTime = now.Hour() * 3600 + now.Minute() * 60 + now.Second();
 }
-// function for checking the time right now
+// funktionen kollar tiden just nu
 void updateRTCtimer() {
   RtcDateTime now = Rtc.GetDateTime();
   timeNow = now.Hour() * 3600 + now.Minute() * 60 + now.Second();
 }
-// help function for timer, and startFan functions that calculates the difference from now since the start of the timer
+// funktion för att visa tiden som gått, tiden räknar upp
 void timeElapsed() {
   elapsedTime = timeNow - startTime;
 
-  //Converts the elapsed time into hours, minutes, and seconds
+  //konverterar tiden som gått till timmar, minuter och sekunder
   elapsedHours = floor(elapsedTime / 3600);
   elapsedMinutes = floor((elapsedTime % 3600) / 60);
   elapsedSeconds = elapsedTime % 60;
 }
+//funktion för att hämta klockslag från rtc modulen
 void updateRTC() {
   RtcDateTime now = Rtc.GetDateTime();
   hour = now.Hour();
   minute = now.Minute();
   second = now.Second();
 }
+//funktion för att lägga till text på skärmen samt hur den texten ska synas
 void updateOled(String text) {
 
   oled.firstPage();
